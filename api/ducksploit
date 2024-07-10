@@ -1,0 +1,8 @@
+name: ducksploit
+id: 1
+description: DuckSploit is a remote adminisitration tool for any OS.
+image: https://ducksploit.com/public/playground_assets/pc-600h.png
+banner: https://github.com/canarddu38/DUCKSPLOIT/blob/root/images/dsbanner.png?raw=true
+versions: https://github.com/canarddu38/DUCKSPLOIT/blob/root/hacker/versions.txt
+link: https://ducksploit.com
+type: hacking_software
