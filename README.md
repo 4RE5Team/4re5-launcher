@@ -1,1 +1,3 @@
-# 4re5-launcher
+# 4re5 manager
+
+Simple installer 
