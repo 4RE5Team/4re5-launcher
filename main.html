@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>4re5 manager</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <style>
+            
+            html {
+                padding: 0px;
+                margin: 0px;
+                --color-primary: #FF6D00;
+                --color-secondary: #212121;
+
+                --color-primary-bg: #FFFFFF;
+                --color-secondary-bg: #EFF0F2;
+
+                --color-text-primary: #333333;
+                --color-text-secondary: #757575;
+
+                --color-icon: #fb8500ff;
+                --color-success: #00C853;
+                --color-warning: #D32F2F;
+
+
+                --soft-magenta: #BB86FC;
+                --soft-teal: #03DAC6;
+                --soft-grey: #B3B3B3;
+                --soft-red: #CF6679;
+
+
+                --menu-width: 250px;
+                --mini-icon-size: 20px;
+                --bar-height: 75px;
+                --icon-size: 35px;
+                --stat-width: 150px;
+                --stat-height: 100px;
+                --stat-round: 20px;
+            }
+            body {
+                font-family: sans-serif;
+                padding: 0px;
+                margin: 0px;
+                color: #E0E0E0;
+                overflow: hidden;
+            }
+
+            .bar {
+                background-color: var(--color-primary-bg);
+            }
+
+            .icon {
+                width: var(--icon-size);
+                height: var(--icon-size);
+            }
+
+            .warning-icon {
+                width: var(--mini-icon-size);
+                height: var(--mini-icon-size);
+                fill: var(--color-warning);
+            }
+
+            .menu-icon {
+                position: absolute;
+                top: calc(var(--bar-height) / 2 - var(--icon-size) / 2);
+                left: calc(var(--bar-height) / 2 - var(--icon-size) / 2);
+            }
+
+            .menu-icon-logout {
+                position: absolute;
+                top: calc(100vh - var(--icon-size) - 10px);
+                left: calc(var(--menu-width) - 10px);
+            }
+
+            .menu-profile {
+                position: absolute;
+                top: calc(var(--bar-height) / 2 - var(--icon-size) / 2);
+                right: calc(var(--bar-height) / 2 - var(--icon-size) / 2);
+            }
+
+            .opened {
+                transform: translateX(0px) !important;
+            }
+
+            .menu {
+                padding: 20px;
+                gap: 10px;
+                padding-top: 100px;
+                height: 100vh;
+                width: 100%;
+                max-width: var(--menu-width);
+                background: var(--color-secondary-bg);
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index: 5;
+                box-shadow: #333333 8px 0 20px 0px;
+                transform: translateX(calc(-1.5 * var(--menu-width)));
+                transition: all 0.5s;
+
+                svg {
+                    cursor: pointer;
+                }
+
+                span {
+                    color: var(--color-text-primary);
+                    text-transform: lowercase;
+                    font-size: 24px;
+                }
+            }
+
+            .frame {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            .stats {
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+                display: flex;
+                height: calc(2 * var(--stat-height) + 2 * 10px);
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+
+            .stat {
+                padding: 10px;
+                width: 100%;
+                max-width: var(--stat-width);
+                height: 100%;
+                max-height: var(--stat-height);
+                border-radius: var(--stat-round);
+            }
+            .stat1 {
+                color: white;
+                background: var(--soft-magenta);
+            }
+            .stat2 {
+                color: white;
+                background: var(--soft-teal);
+            }
+            .stat3 {
+                color: white;
+                background: var(--soft-grey);
+            }
+            .stat4 {
+                color: white;
+                background: var(--soft-red);
+            }
+
+            .bottombar {
+                gap: 20px; 
+                display: flex; 
+                flex-direction: row; 
+                width: 100%; 
+                height: var(--bar-height);
+                align-items: center;
+                justify-content: center;
+                fill: var(--color-secondary);
+                transition: all 1s;
+            }
+
+            .selected {
+                transition: all 100ms;
+                fill: var(--color-primary);
+
+                span {
+                    transition: all 100ms;
+                    color: var(--color-primary);
+                }
+                
+            }
+
+            .bottombar-item {
+                cursor: pointer;
+                column-gap: 5px;
+                max-width: 100px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: var(--color-text-primary);
+                font-weight: bold;
+
+                svg {
+                    margin-bottom: 5px;
+                }
+            }
+            
+        
+        </style>
+    </head>
+
+
+    <body onload="select(0)">
+        <!-- menu dialog -->
+        <div id="menu" class="menu">
+            <svg onclick="menuOpenClose()" id="menu-opened" class="icon menu-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512.021 512.021" style="enable-background:new 0 0 512.021 512.021;" xml:space="preserve" width="512" height="512"><g><path d="M301.258,256.01L502.645,54.645c12.501-12.501,12.501-32.769,0-45.269c-12.501-12.501-32.769-12.501-45.269,0l0,0   L256.01,210.762L54.645,9.376c-12.501-12.501-32.769-12.501-45.269,0s-12.501,32.769,0,45.269L210.762,256.01L9.376,457.376   c-12.501,12.501-12.501,32.769,0,45.269s32.769,12.501,45.269,0L256.01,301.258l201.365,201.387   c12.501,12.501,32.769,12.501,45.269,0c12.501-12.501,12.501-32.769,0-45.269L301.258,256.01z"/></g></svg>
+            <span>⇒ about</span>
+            <svg class="warning-icon menu-icon-logout" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512"><path d="M11.476,15a1,1,0,0,0-1,1v3a3,3,0,0,1-3,3H5a3,3,0,0,1-3-3V5A3,3,0,0,1,5,2H7.476a3,3,0,0,1,3,3V8a1,1,0,0,0,2,0V5a5.006,5.006,0,0,0-5-5H5A5.006,5.006,0,0,0,0,5V19a5.006,5.006,0,0,0,5,5H7.476a5.006,5.006,0,0,0,5-5V16A1,1,0,0,0,11.476,15Z"/><path d="M22.867,9.879,18.281,5.293a1,1,0,1,0-1.414,1.414l4.262,4.263L6,11a1,1,0,0,0,0,2H6l15.188-.031-4.323,4.324a1,1,0,1,0,1.414,1.414l4.586-4.586A3,3,0,0,0,22.867,9.879Z"/></svg>
+        </div>
+        <!-- topbar -->
+        <div class="bar" style="gap: 20px; display: flex; align-items: center; text-align: left; justify-content: center; width: 100%; height: var(--bar-height)" id="topbar">
+            <!-- menu -->
+            <svg onclick="menuOpenClose()" id="menu-closed" class="icon menu-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="35" height="35">
+                <g>
+                <path d="M480,224H32c-17.673,0-32,14.327-32,32s14.327,32,32,32h448c17.673,0,32-14.327,32-32S497.673,224,480,224z"/>
+                <path d="M32,138.667h448c17.673,0,32-14.327,32-32s-14.327-32-32-32H32c-17.673,0-32,14.327-32,32S14.327,138.667,32,138.667z"/>
+                <path d="M480,373.333H32c-17.673,0-32,14.327-32,32s14.327,32,32,32h448c17.673,0,32-14.327,32-32S497.673,373.333,480,373.333z"/>
+            </g></svg>
+            
+            <!-- user -->
+            <svg class="icon menu-profile" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="50" height="50"><path d="M12,12A6,6,0,1,0,6,6,6.006,6.006,0,0,0,12,12ZM12,2A4,4,0,1,1,8,6,4,4,0,0,1,12,2Z"/><path d="M12,14a9.01,9.01,0,0,0-9,9,1,1,0,0,0,2,0,7,7,0,0,1,14,0,1,1,0,0,0,2,0A9.01,9.01,0,0,0,12,14Z"/></svg>
+
+
+
+        </div>
+        <!-- ---------------- middle bar -------------- -->
+        <div style="overflow: hidden; background: var(--color-secondary-bg); width: 100%; height: calc(100vh - 2 * var(--bar-height))">
+            <!-- for home -->
+            <div id="frame-home" style="width: 100%; height: 100%;">
+                <div class="stats">
+                    <div class="stat stat1">
+                        <p>Lorem Ipsum</p>
+                        <h1>50%</h1>
+                    </div>
+
+                    <div class="stat stat2">
+                        <p>Lorem Ipsum</p>
+                        <h1>15K</h1>
+                    </div>
+
+                    <div class="stat stat3">
+                        <p>Lorem Ipsum</p>
+                        <h1>500+</h1>
+                    </div>
+
+                    <div class="stat stat4">
+                        <p>Lorem Ipsum</p>
+                        <h1>1yo</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- --------------------bottom bar------------------- -->
+        <div class="bar bottombar" id="bottombar">
+            <!-- home -->
+            <div class="bottombar-item selected" id="select-home" onclick="select(0)">
+                <svg class="icon bottombar_item" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35"><g id="_01_align_center" data-name="01 align center"><path d="M13.338.833a2,2,0,0,0-2.676,0L0,10.429v10.4a3.2,3.2,0,0,0,3.2,3.2H20.8a3.2,3.2,0,0,0,3.2-3.2v-10.4ZM15,22.026H9V17a3,3,0,0,1,6,0Zm7-1.2a1.2,1.2,0,0,1-1.2,1.2H17V17A5,5,0,0,0,7,17v5.026H3.2a1.2,1.2,0,0,1-1.2-1.2V11.319l10-9,10,9Z"/></g></svg>
+                <svg class="icon bottombar_selected-item" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512"><g><path d="M256,319.841c-35.346,0-64,28.654-64,64v128h128v-128C320,348.495,291.346,319.841,256,319.841z"/><g><path d="M362.667,383.841v128H448c35.346,0,64-28.654,64-64V253.26c0.005-11.083-4.302-21.733-12.011-29.696l-181.29-195.99    c-31.988-34.61-85.976-36.735-120.586-4.747c-1.644,1.52-3.228,3.103-4.747,4.747L12.395,223.5    C4.453,231.496-0.003,242.31,0,253.58v194.261c0,35.346,28.654,64,64,64h85.333v-128c0.399-58.172,47.366-105.676,104.073-107.044    C312.01,275.383,362.22,323.696,362.667,383.841z"/><path d="M256,319.841c-35.346,0-64,28.654-64,64v128h128v-128C320,348.495,291.346,319.841,256,319.841z"/></g></g></svg>
+                <span>home</span>
+            </div>
+            <!-- news -->
+            <div class="bottombar-item" id="select-news" onclick="select(1)">
+                <svg class="icon bottombar_item" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m17 14a1 1 0 0 1 -1 1h-8a1 1 0 0 1 0-2h8a1 1 0 0 1 1 1zm-4 3h-5a1 1 0 0 0 0 2h5a1 1 0 0 0 0-2zm9-6.515v8.515a5.006 5.006 0 0 1 -5 5h-10a5.006 5.006 0 0 1 -5-5v-14a5.006 5.006 0 0 1 5-5h4.515a6.958 6.958 0 0 1 4.95 2.05l3.484 3.486a6.951 6.951 0 0 1 2.051 4.949zm-6.949-7.021a5.01 5.01 0 0 0 -1.051-.78v4.316a1 1 0 0 0 1 1h4.316a4.983 4.983 0 0 0 -.781-1.05zm4.949 7.021c0-.165-.032-.323-.047-.485h-4.953a3 3 0 0 1 -3-3v-4.953c-.162-.015-.321-.047-.485-.047h-4.515a3 3 0 0 0 -3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3z"/></svg>
+                <svg class="icon bottombar_selected-item" xmlns="http://www.w3.org/2000/svg" id="Layer_1" height="512" viewBox="0 0 24 24" width="512" data-name="Layer 1"><path d="m14 7v-6.54a6.977 6.977 0 0 1 2.465 1.59l3.484 3.486a6.954 6.954 0 0 1 1.591 2.464h-6.54a1 1 0 0 1 -1-1zm8 3.485v8.515a5.006 5.006 0 0 1 -5 5h-10a5.006 5.006 0 0 1 -5-5v-14a5.006 5.006 0 0 1 5-5h4.515c.163 0 .324.013.485.024v6.976a3 3 0 0 0 3 3h6.976c.011.161.024.322.024.485zm-8 8.515a1 1 0 0 0 -1-1h-5a1 1 0 0 0 0 2h5a1 1 0 0 0 1-1zm3-4a1 1 0 0 0 -1-1h-8a1 1 0 0 0 0 2h8a1 1 0 0 0 1-1z"/></svg>
+                <span>news</span>
+            </div>
+            <!-- shop -->
+            <div class="bottombar-item" id="select-shop" onclick="select(2)">
+                <svg class="icon bottombar_selected-item" xmlns="http://www.w3.org/2000/svg" id="Filled" viewBox="0 0 24 24" width="512" height="512"><path d="M22.713,4.077A2.993,2.993,0,0,0,20.41,3H4.242L4.2,2.649A3,3,0,0,0,1.222,0H1A1,1,0,0,0,1,2h.222a1,1,0,0,1,.993.883l1.376,11.7A5,5,0,0,0,8.557,19H19a1,1,0,0,0,0-2H8.557a3,3,0,0,1-2.82-2h11.92a5,5,0,0,0,4.921-4.113l.785-4.354A2.994,2.994,0,0,0,22.713,4.077Z"/><circle cx="7" cy="22" r="2"/><circle cx="17" cy="22" r="2"/></svg>
+                <svg class="icon bottombar_item" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M22.713,4.077A2.993,2.993,0,0,0,20.41,3H4.242L4.2,2.649A3,3,0,0,0,1.222,0H1A1,1,0,0,0,1,2h.222a1,1,0,0,1,.993.883l1.376,11.7A5,5,0,0,0,8.557,19H19a1,1,0,0,0,0-2H8.557a3,3,0,0,1-2.82-2h11.92a5,5,0,0,0,4.921-4.113l.785-4.354A2.994,2.994,0,0,0,22.713,4.077ZM21.4,6.178l-.786,4.354A3,3,0,0,1,17.657,13H5.419L4.478,5H20.41A1,1,0,0,1,21.4,6.178Z"/><circle cx="7" cy="22" r="2"/><circle cx="17" cy="22" r="2"/></svg>
+                <span>shop</span>
+            </div>
+            <!-- settings -->
+            <div class="bottombar-item" id="select-settings" onclick="select(3)">
+                <svg class="icon bottombar_item" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,14Z"/><path d="M21.294,13.9l-.444-.256a9.1,9.1,0,0,0,0-3.29l.444-.256a3,3,0,1,0-3-5.2l-.445.257A8.977,8.977,0,0,0,15,3.513V3A3,3,0,0,0,9,3v.513A8.977,8.977,0,0,0,6.152,5.159L5.705,4.9a3,3,0,0,0-3,5.2l.444.256a9.1,9.1,0,0,0,0,3.29l-.444.256a3,3,0,1,0,3,5.2l.445-.257A8.977,8.977,0,0,0,9,20.487V21a3,3,0,0,0,6,0v-.513a8.977,8.977,0,0,0,2.848-1.646l.447.258a3,3,0,0,0,3-5.2Zm-2.548-3.776a7.048,7.048,0,0,1,0,3.75,1,1,0,0,0,.464,1.133l1.084.626a1,1,0,0,1-1,1.733l-1.086-.628a1,1,0,0,0-1.215.165,6.984,6.984,0,0,1-3.243,1.875,1,1,0,0,0-.751.969V21a1,1,0,0,1-2,0V19.748a1,1,0,0,0-.751-.969A6.984,6.984,0,0,1,7.006,16.9a1,1,0,0,0-1.215-.165l-1.084.627a1,1,0,1,1-1-1.732l1.084-.626a1,1,0,0,0,.464-1.133,7.048,7.048,0,0,1,0-3.75A1,1,0,0,0,4.79,8.992L3.706,8.366a1,1,0,0,1,1-1.733l1.086.628A1,1,0,0,0,7.006,7.1a6.984,6.984,0,0,1,3.243-1.875A1,1,0,0,0,11,4.252V3a1,1,0,0,1,2,0V4.252a1,1,0,0,0,.751.969A6.984,6.984,0,0,1,16.994,7.1a1,1,0,0,0,1.215.165l1.084-.627a1,1,0,1,1,1,1.732l-1.084.626A1,1,0,0,0,18.746,10.125Z"/></svg>
+                <svg class="icon bottombar_selected-item" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512"><g><path d="M34.283,384c17.646,30.626,56.779,41.148,87.405,23.502c0.021-0.012,0.041-0.024,0.062-0.036l9.493-5.483   c17.92,15.332,38.518,27.222,60.757,35.072V448c0,35.346,28.654,64,64,64s64-28.654,64-64v-10.944   c22.242-7.863,42.841-19.767,60.757-35.115l9.536,5.504c30.633,17.673,69.794,7.167,87.467-23.467   c17.673-30.633,7.167-69.794-23.467-87.467l0,0l-9.472-5.461c4.264-23.201,4.264-46.985,0-70.187l9.472-5.461   c30.633-17.673,41.14-56.833,23.467-87.467c-17.673-30.633-56.833-41.14-87.467-23.467l-9.493,5.483   C362.862,94.638,342.25,82.77,320,74.944V64c0-35.346-28.654-64-64-64s-64,28.654-64,64v10.944   c-22.242,7.863-42.841,19.767-60.757,35.115l-9.536-5.525C91.073,86.86,51.913,97.367,34.24,128s-7.167,69.794,23.467,87.467l0,0   l9.472,5.461c-4.264,23.201-4.264,46.985,0,70.187l-9.472,5.461C27.158,314.296,16.686,353.38,34.283,384z M256,170.667   c47.128,0,85.333,38.205,85.333,85.333S303.128,341.333,256,341.333S170.667,303.128,170.667,256S208.872,170.667,256,170.667z"/></g></svg>
+                <span>settings</span>
+            </div>
+
+
+        </div>
+        <script>
+            let icon_home = document.getElementById("select-home");
+            let icon_news = document.getElementById("select-news");
+            let icon_shop = document.getElementById("select-shop");
+            let icon_settings = document.getElementById("select-settings");
+
+            function selectElem(elem) {
+                a = document.getElementById("bottombar").getElementsByClassName("bottombar-item");
+                for (let index = 0; index < a.length; index++) {
+                    element = a[index];
+                    if(element == elem) {
+                        // display
+                        element.classList.add("selected");
+                        // original
+                        element.getElementsByClassName("bottombar_item")[0].style.display = "none";
+
+                        // selected one
+                        element.getElementsByClassName("bottombar_selected-item")[0].style.display = "block";
+                    } else {
+                        // hide
+                        
+                        element.classList.remove("selected");
+                        // original
+                        element.getElementsByClassName("bottombar_item")[0].style.display = "block";
+
+                        // selected one
+                        element.getElementsByClassName("bottombar_selected-item")[0].style.display = "none";
+                    }
+                }
+
+            }
+
+            function select(value) {
+                switch(value) {
+                    case 0: //home
+                        selectElem(icon_home);
+                        break;
+                    case 1: //news
+                        selectElem(icon_news);
+                        break;
+                    case 2: //shop
+                        selectElem(icon_shop);
+                        break;
+                    case 3: //settings
+                        selectElem(icon_settings);
+                        break;
+                    default:
+                        console.error("ERROR on bottombar: invalid item id");
+                }
+            }
+
+            let menu = document.getElementById("menu");
+            function menuOpenClose() {
+                // -2 * var(--menu-width)
+                if(menu.classList.contains("opened")) { // already opened
+                    // close
+                    menu.classList.remove("opened");
+                } else {
+                    // open
+                    menu.classList.add("opened");
+                }
+            }
+        </script>
+    </body>
+</html>
